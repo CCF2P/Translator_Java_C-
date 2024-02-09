@@ -1,3 +1,4 @@
+#pragma once
 #include "..\\Utils\\Help.h"
 #include ".\\Token\\Token.h"
 
@@ -20,11 +21,11 @@ private:
         BOOLEAN
     };
 
-    int pos_text;                            // Позиция в строке programm_text
-    int position;                            // Позиция в строке файла
-    int lineno;                              // Номер строки в файле
+    int pos_text;  // Позиция в строке programm_text
+    int position;  // Позиция в строке файла
+    int lineno;    // Номер строки в файле
     
-    STATES state;                            // Текущее состояние лексера
+    STATES state;  // Текущее состояние лексера
 
     /*
     * Возвращает символ из текста программы и, если наш указатель

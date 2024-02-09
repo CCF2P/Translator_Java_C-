@@ -10,8 +10,8 @@ Lexer::Lexer(std::string file_path)
     this->state = STATES::NONE;
 
     this->pos_text = -1;
-    this->position = -1;
-    this->lineno = 0;
+    this->position = 0;
+    this->lineno = 1;
 
     std::ifstream file;
     file.open(file_path, std::ios::in);
@@ -19,10 +19,14 @@ Lexer::Lexer(std::string file_path)
         throw "Cannot open file";
 
     std::string str;
+    std::getline(file, str);
+    str += "\n";
+    this->programm_text.insert(this->programm_text.begin(), str);
     while (!file.eof())
     {
         std::getline(file, str);
-        this->programm_text.emplace_back(str);
+        str += "\n";
+        this->programm_text[this->programm_text.size() - 1] += str;
     }
 }
 
@@ -34,11 +38,14 @@ std::string Lexer::get_char()
 {
     this->position += 1;
     this->pos_text += 1;
-    if (this->position < this->programm_text.size())
+    if (this->pos_text < this->programm_text[0].size())
     {
-        std::string c(1, this->programm_text[this->position][this->pos_text]);
+        std::string c(1, this->programm_text[0][this->pos_text]);
         if (c == "\n")
+        {
+            this->position = 1;
             this->lineno += 1;
+        }
         return c;
     }
     else
@@ -109,24 +116,23 @@ Token Lexer::get_next_token()
                 ch = this->get_char();
 
                 if (accum == "//")
-                    while (accum != "\n")
+                    while (ch != "\n")
                         ch = this->get_char();
                 
                 if (ch == ";" || help.OPERATORS.count(ch) == 0)
                     this->state = STATES::NONE;
-
-                this->pos_text -= 1;
-                this->position -= 1;
-                if (accum == "//")
-                {
-                    accum = "";
-                    this->state = STATES::COMMENT;
-                }
-                else if (help.OPERATORS.count(accum) != 0)
-                    return Token(accum, help.OPERATORS[accum]);
-                else
-                    throw "Operator error";
             }
+
+            this->pos_text -= 1;
+            if (accum == "//")
+            {
+                accum = "";
+                this->state = STATES::COMMENT;
+            }
+            else if (help.OPERATORS.count(accum) != 0)
+                return Token(accum, help.OPERATORS[accum]);
+            else
+                throw "Operator error";
         }
 
         // Для ID, ACCESS_MODIFIERS, KEY_WORDS, DATA_TYPES
@@ -135,6 +141,8 @@ Token Lexer::get_next_token()
 
         }
     }
+
+    return Token("If you get this token", "it's means that method get_next_token has error");
 }
 
 
