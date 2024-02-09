@@ -233,7 +233,7 @@ Token Lexer::get_next_token()
         }
     }
 
-    return Token("If you get this token", "it's means that method get_next_token has error");
+    return Token("If you get this token", "it's means that method get_next_token() has error");
 }
 
 
