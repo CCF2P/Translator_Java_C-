@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <cctype>
 
 
 Lexer::Lexer(std::string file_path)
@@ -114,10 +115,6 @@ Token Lexer::get_next_token()
             {
                 accum += ch;
                 ch = this->get_char();
-
-                if (accum == "//")
-                    while (ch != "\n")
-                        ch = this->get_char();
                 
                 if (ch == ";" || help.OPERATORS.count(ch) == 0)
                     this->state = STATES::NONE;
@@ -128,6 +125,10 @@ Token Lexer::get_next_token()
             {
                 accum = "";
                 this->state = STATES::COMMENT;
+
+                while (ch != "\n")
+                        ch = this->get_char();
+                ch = this->get_char();
             }
             else if (help.OPERATORS.count(accum) != 0)
                 return Token(accum, help.OPERATORS[accum]);
@@ -136,9 +137,99 @@ Token Lexer::get_next_token()
         }
 
         // Для ID, ACCESS_MODIFIERS, KEY_WORDS, DATA_TYPES
-        if (0)
+        if (std::isalpha(ch[0]))
         {
+            this->state = STATES::ID;
+            while (std::isalnum(ch[0]))
+            {
+                accum += ch;
+                if (accum == "System.out.print")
+                {
+                    ch = this->get_char();
 
+                    if (ch == "l")
+                    {
+                        accum += ch;
+                        ch = this->get_char();
+                        accum += ch;
+                        return Token(accum, help.KEY_WORDS[accum]);
+                    }
+                    else
+                    {
+                        this->pos_text -= 1;
+                        return Token(accum, help.KEY_WORDS[accum]);
+                    }
+                }
+
+                if (help.ACCESS_MODIFIERS.count(accum) != 0)
+                    return Token(accum, help.ACCESS_MODIFIERS[accum]);
+                else if (help.KEY_WORDS.count(accum) != 0)
+                    return Token(accum, help.KEY_WORDS[accum]);
+                else if (help.DATA_TYPES.count(accum) != 0)
+                    return Token(accum, help.DATA_TYPES[accum]);
+                
+                ch = this->get_char();
+                if ((accum == "System" || accum == "System.out") && ch == ".")
+                {
+                    accum += ch;
+                    ch = this->get_char();
+                }
+            }
+
+            this->pos_text -= 1;
+            if (accum == "false" || accum == "true")
+                return Token(accum, help.DATA_TYPES["boolean"]);
+            else
+                return Token(accum, "ID");
+        }
+
+        // Для определения INT, DOUBLE
+        if (std::isdigit(ch[0]))
+        {
+            this->state = STATES::INT;
+            while (this->state != STATES::NONE)
+            {
+                accum += ch;
+                ch = this->get_char();
+                if (ch == ".")
+                {
+                    if (this->state == STATES::DOUBLE)
+                        throw "Double error";
+                    
+                    this->state = STATES::DOUBLE;
+                    accum += ch;
+                    ch = this->get_char();
+                }
+
+                if (ch == ";" || help.IGNORE.count(ch) != 0)
+                    this->state = STATES::NONE;
+                else if (help.SPECIAL_SYMBOLS.count(ch) != 0)
+                    this->state = STATES::NONE;
+                else if (help.OPERATORS.count(ch) != 0)
+                    this->state = STATES::NONE;
+                else if (!std::isdigit(ch[0]))
+                {
+                    if (this->state == STATES::DOUBLE)
+                        throw "double error";
+                    else
+                        throw "int error";
+                }
+            }
+
+            if (accum[accum.size() - 1] == '.')
+                throw "real number error";
+
+            this->pos_text -= 1;
+            if (accum.find('.') != std::string::npos)
+                return Token(accum, help.DATA_TYPES["double"]);
+            else
+                return Token(accum, help.DATA_TYPES["int"]);
+        }
+
+        if (this->state == STATES::START)
+        {
+            this->state == STATES::END_OF_FILE;
+            return Token("EOF", "EOF");
         }
     }
 
