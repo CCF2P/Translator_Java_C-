@@ -17,7 +17,7 @@ Lexer::Lexer(std::string file_path)
     std::ifstream file;
     file.open(file_path, std::ios::in);
     if (!file.is_open())
-        throw "Cannot open file";
+        throw OtherError("Cannot open file", 0, 0);
 
     std::string str;
     std::getline(file, str);
@@ -95,7 +95,7 @@ Token Lexer::get_next_token()
             accum += ch;
             ch = this->get_char();
             if (ch != "'")
-                throw "Char type error";
+                throw SyntaxError("Char type error", this->lineno, this->position);
             else
                 return Token(accum, help.DATA_TYPES["char"]);
         }
@@ -133,7 +133,7 @@ Token Lexer::get_next_token()
             else if (help.OPERATORS.count(accum) != 0)
                 return Token(accum, help.OPERATORS[accum]);
             else
-                throw "Operator error";
+                throw SyntaxError("Operator error", this->lineno, this->position);
         }
 
         // Для ID, ACCESS_MODIFIERS, KEY_WORDS, DATA_TYPES
@@ -194,7 +194,7 @@ Token Lexer::get_next_token()
                 if (ch == ".")
                 {
                     if (this->state == STATES::DOUBLE)
-                        throw "Double error";
+                        throw SyntaxError("Invalid double type", this->lineno, this->position);
                     
                     this->state = STATES::DOUBLE;
                     accum += ch;
@@ -210,14 +210,14 @@ Token Lexer::get_next_token()
                 else if (!std::isdigit(ch[0]))
                 {
                     if (this->state == STATES::DOUBLE)
-                        throw "double error";
+                        throw SyntaxError("Invalid double type", this->lineno, this->position);
                     else
-                        throw "int error";
+                        throw SyntaxError("Invalid integer type", this->lineno, this->position);
                 }
             }
 
             if (accum[accum.size() - 1] == '.')
-                throw "real number error";
+                throw SyntaxError("Real number type error", this->lineno, this->position);
 
             this->pos_text -= 1;
             if (accum.find('.') != std::string::npos)
@@ -240,7 +240,7 @@ Token Lexer::get_next_token()
 Token Lexer::parse()
 {
     if (this->programm_text.size() == 0)
-        throw "input text is empty";
+        throw OtherError("input text is empty", this->lineno, this->position);
 
     if (this->state == STATES::END_OF_FILE)
         return Token("EOF", "EOF");

@@ -1,6 +1,7 @@
 #pragma once
 #include "..\\Utils\\Help.h"
 #include ".\\Token\\Token.h"
+#include "..\\Utils\\Error.h"
 
 
 class Lexer
@@ -34,11 +35,6 @@ private:
     */
     std::string get_char();
 
-    /*
-    * Возвращает следующий разобранный токен из текста программы
-    */
-    Token get_next_token();
-
 public:
     std::vector<std::string> programm_text;  // Строки программы, считанные из файла
     std::vector<Token> flow_lexem;           // Список токенов
@@ -46,6 +42,11 @@ public:
     Lexer(std::string file_path);
     ~Lexer();
 
+    /*
+    * Возвращает следующий разобранный токен из текста программы
+    */
+    Token get_next_token();
+    
     /*
     * Начало начало - метод parse.
     * Он открывает файл с исходным кодом на Java
