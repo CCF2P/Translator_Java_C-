@@ -1,0 +1,152 @@
+# Грамматика входного языка (Java)
+
+<programm> ::= <class declaration>
+
+### Описание токенов
+
+<keyword> ::= boolean 
+            | class 
+            | else 
+            | float 
+            | for 
+            | if 
+            | int 
+            | public 
+            | return 
+            | static 
+            | this 
+            | void 
+            | while
+<literal> ::= <integer literal>
+            | <floating-point literal>
+            | <boolean literal>
+            | <string literal>
+<boolean literal> ::= true
+                    | false
+<integer literal> ::= 0
+                    | <non zero digit> <digits>?
+<digits> ::= <digit>
+           | <digits> <digit>
+<digit> ::= 0
+          | <non zero digit>
+<non zero digit> ::= 1
+                   | 2
+                   | 3
+                   | 4
+                   | 5
+                   | 6
+                   | 7
+                   | 8
+                   | 9
+<floating-point literal> ::= <digits> . <digits>
+<single character> ::= <input character>
+<string literal> ::= " <string characters>? "
+<string characters> ::= <string character>
+                      | <string characters> <string character>
+<string character> ::= <input character>
+
+### Описание грамматики переменных
+
+<variable declarator> ::= <type> <variable declarator id> =? <variable initializer>?
+<variable declarator id> ::= <identifier>
+<variable initializer> ::= <expression>
+                         | <array initializer>
+<array initializer> ::= { <variable initializers>? ,? }
+<increment> ::= <identifier>++
+
+### Описание грамматики класса
+
+<class declaration> ::= public class <identifier> <class body>
+<class body> ::= { <class body declarations> }
+<class body declarations> ::= <method declaration>
+
+### Описание грамматики методов класса
+
+<method declaration> ::= <method header> <method body>
+<method header> ::= public static <result type> <method declarator>
+<result type> ::= <type>
+                | void
+<method declarator> ::= <identifier> ( <formal parameter list> )
+<method body> ::= <block>?;
+<formal parameter list> ::= <formal parameter>
+                          | <formal parameter>, <formal parameter list>
+<formal parameter> ::= <type> <variable declarator id>
+
+### Описание типов
+
+<type> ::= <primitive type>
+         | <array type>
+<primitive type> ::= <numeric type>
+                   | boolean
+                   | string
+<numeric type> ::= int
+                 | float
+<array type> ::= <type> [ ]
+
+### Описание блоков
+
+<block> ::= { <block statements> }
+<block statements> ::= <block statement>
+                     | <block statement> <block statements>
+<block statement> ::= <local variable declaration statement>
+                    | <statement>
+<local variable declaration statement> ::= <local variable declaration> ;
+<local variable declaration> ::= <type> <variable declarators>
+<statement> ::= <statement without trailing substatement>
+              | <if then statement>
+              | <if then else statement>
+              | <while statement>
+<statement without trailing substatement> ::= <block> 
+                                            | <empty statement>
+                                            | <expression statement>
+                                            | <return statement>
+<return statement> ::= return <expression>? ;
+<empty statement> ::= ;
+<expression statement> ::= <statement expression> ;
+<statement expression> ::= <assignment> 
+                         | <method invocation>
+<if then statement>::= if ( <expression> ) <block>
+<if then else statement>::= if ( <expression> ) <block> else <block>
+<while statement> ::= while ( <expression> ) <block>
+<switch statement> ::= switch ( <variable> ) <switch block>
+
+### Описание выражений
+
+<expression> ::= <or expression>
+               | <assignment>
+<assignment> ::= <left hand side> = <assignment expression>
+<left hand side> ::= <identifier>
+                   | <array access>
+<array access> ::= <identifier> [ <expression> ]
+<or expression> ::= <and expression>
+                  | <and expression> || <or expression>
+<and expression> ::= <equality expression> && <and expression>
+<equality expression> ::= <relation expression>
+                        | <relation expression> == <equality expression>
+                        | <relation expression> != <equality expression>
+<relational expression> ::= <additive expression>
+                          | <additive expression> < <relational expression>
+                          | <additive expression> > <relational expression>
+<additive expression> ::= <multiplicative expression>
+                        | <multiplicative expression> + <additive expression>
+                        | <multiplicative expression> - <additive expression>
+<multiplicative expression> ::= <unary expression>
+                              | <unary expression> * <multiplicative expression>
+                              | <unary expression> / <multiplicative expression>
+                              | <unary expression> % <multiplicative expression>
+<unary expression> ::= + <unary expression>
+                     | - <unary expression>
+<array creation expression> ::= new <primitive type> [ <expression> ]
+<method invocation> ::= <identifier> ( <argument list>? )
+<argument list> ::= <expression>
+                  | <expression> , <argument list>
+<switch block> ::= { <cases blocks> }
+<cases blocks> ::= <case block>
+                 | <cases blocks>
+<case block> ::= case <variable> : <block>? break; <default block>?
+<default block> ::= default <variable> : <block>? break;
+
+
+# Диаграмма конечного автомата лексера
+
+![](./Images/Lexer_state_machine.png)

@@ -1,8 +1,8 @@
 #pragma once
-#include "..\\..\\Lexer\\Lexer.h"
-#include "..\\..\\Lexer\\Token\\Token.h"
-#include "..\\..\\Utils\\Help.h"
-#include "..\\SymbolTable\\SymbolTable.h"
+#include "..\\..\\Lexer\\Lexer.hpp"
+#include "..\\..\\Lexer\\Token\\Token.hpp"
+#include "..\\..\\Utils\\Help.hpp"
+#include "..\\SymbolTable\\SymbolTable.hpp"
 
 
 class Node
@@ -47,6 +47,9 @@ class NodeBlock : public Node
 public:
     NodeBlock(std::vector<Node> children) : Node(children) {};
 };
+
+
+class NodeElseBlock : public NodeBlock {};
 
 
 class NodeSystemOutPrint : public Node
@@ -158,13 +161,19 @@ public:
         return s;
     }
 };
-class NodeFormalParams : public NodeParams {};
-class NodeActualParams : public NodeParams {};
 
 
-class NodeElseBlock : public NodeBlock
+class NodeFormalParams : public NodeParams
 {
+public:
+    NodeFormalParams(std::vector<Node> params) : NodeParams(params) {};
+};
 
+
+class NodeActualParams : public NodeParams
+{
+public:
+    NodeActualParams(std::vector<Node> params) : NodeParams(params) {};
 };
 
 

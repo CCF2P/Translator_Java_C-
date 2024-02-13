@@ -1,7 +1,7 @@
 #pragma once
-#include "..\\Utils\\Help.h"
-#include ".\\Token\\Token.h"
-#include "..\\Utils\\Error.h"
+#include "..\\Utils\\Help.hpp"
+#include ".\\Token\\Token.hpp"
+#include "..\\Utils\\Error.hpp"
 
 
 class Lexer
@@ -27,6 +27,7 @@ public:
     int lineno;    // Номер строки в файле
 
     STATES state;  // Текущее состояние лексера
+    Help help;     // Вспомогательная переменная для обращения к словарям
 
     std::vector<std::string> programm_text;  // Строки программы, считанные из файла
     std::vector<Token> flow_lexem;           // Список токенов

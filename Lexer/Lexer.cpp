@@ -9,6 +9,7 @@
 Lexer::Lexer(std::string file_path)
 {
     this->state = STATES::NONE;
+    this->help = Help();
 
     this->pos_text = -1;
     this->position = 0;
@@ -59,8 +60,6 @@ std::string Lexer::get_char()
 
 Token Lexer::get_next_token()
 {
-    Help help;
-
     std::string accum;            // Накапливает символы из текста программы
     this->state = STATES::START;  // Начальное состояние лексера
 

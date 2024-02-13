@@ -1,4 +1,4 @@
-#include ".\\Parser.h"
+#include ".\\Parser.hpp"
 
 
 // =============================== Public ===============================
@@ -18,8 +18,6 @@ void Parser::next_token()
 
 Node Parser::parse()
 {
-    Help help;
-
     if (this->lexer->state == Lexer::STATES::END_OF_FILE)
         throw OtherError("file is empty");
     else
