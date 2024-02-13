@@ -58,8 +58,8 @@ class OtherError : BaseError
 {
 public:
     OtherError(std::string text,
-               int line,
-               int position) : BaseError(text, line, position) {};
+               int line=0,
+               int position=0) : BaseError(text, line, position) {};
 
     std::string what() const override
     {

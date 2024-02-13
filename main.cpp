@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-        Lexer lexer("C:\\Compiler-Theory-and-Algorithms_C++\\inpu.txt");
+        Lexer lexer("C:\\Translator_Java_C-\\input.txt");
         Token t;
         t = lexer.parse();
         t.print_token();

@@ -6,7 +6,7 @@
 
 class Lexer
 {
-private:
+public:
     enum class STATES
     {
         NONE,
@@ -25,8 +25,14 @@ private:
     int pos_text;  // Позиция в строке programm_text
     int position;  // Позиция в строке файла
     int lineno;    // Номер строки в файле
-    
+
     STATES state;  // Текущее состояние лексера
+
+    std::vector<std::string> programm_text;  // Строки программы, считанные из файла
+    std::vector<Token> flow_lexem;           // Список токенов
+
+    Lexer(std::string file_path);
+    ~Lexer();
 
     /*
     * Возвращает символ из текста программы и, если наш указатель
@@ -34,14 +40,7 @@ private:
     * и ставим наш статус равный "EOF" (end of file)
     */
     std::string get_char();
-
-public:
-    std::vector<std::string> programm_text;  // Строки программы, считанные из файла
-    std::vector<Token> flow_lexem;           // Список токенов
-
-    Lexer(std::string file_path);
-    ~Lexer();
-
+    
     /*
     * Возвращает следующий разобранный токен из текста программы
     */
